@@ -1,4 +1,4 @@
-📚 **Terraform Concepts by Level
+📚 **Terraform Concepts by Level **
 🟢 Basic Concepts**
 These are the foundational elements required to write and run Terraform code.
 
