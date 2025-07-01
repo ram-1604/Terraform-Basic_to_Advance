@@ -4,3 +4,73 @@ To install Terraform, find the appropriate package (https://developer.hashicorp.
 After downloading Terraform, unzip the package. Terraform runs as a single binary named terraform. Any other files in the package can be safely removed and Terraform will still function.
 Finally, make sure that the terraform binary is available on your PATH. This process will differ depending on your operating system.
 https://stackoverflow.com/questions/1618280/where-can-i-set-path-to-make-exe-on-windows contains instructions for setting the PATH on Windows through the user interface.
+
+Verify that the installation worked by opening a new terminal session and listing Terraform's available subcommands.
+terraform -version 
+
+
+Linux:
+
+Ensure that your system is up to date and you have installed the gnupg, software-properties-common, and curl packages installed. You will use these packages to verify HashiCorp's GPG signature and install HashiCorp's Debian package repository.
+
+$ sudo apt-get update && sudo apt-get install -y gnupg software-properties-common
+
+Install the HashiCorp GPG key.
+
+$ wget -O- https://apt.releases.hashicorp.com/gpg | \
+gpg --dearmor | \
+sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null
+
+Verify the key's fingerprint.
+
+$ gpg --no-default-keyring \
+--keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg \
+--fingerprint
+
+The gpg command will report the key fingerprint:
+
+/usr/share/keyrings/hashicorp-archive-keyring.gpg
+-------------------------------------------------
+pub   rsa4096 XXXX-XX-XX [SC]
+AAAA AAAA AAAA AAAA
+uid           [ unknown] HashiCorp Security (HashiCorp Package Signing) <security+packaging@hashicorp.com>
+sub   rsa4096 XXXX-XX-XX [E]
+
+
+Refer to the Official Packaging Guide for the latest public signing key. You can also verify the key on Security at HashiCorp under Linux Package Checksum Verification.
+
+Add the official HashiCorp repository to your system. The lsb_release -cs command finds the distribution release codename for your current system, such as buster, groovy, or sid.
+
+$ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(grep -oP '(?<=UBUNTU_CODENAME=).*' /etc/os-release || lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+
+Download the package information from HashiCorp.
+
+$ sudo apt update
+
+Install Terraform from the new repository.
+
+$ sudo apt-get install terraform
+
+Now that you have added the HashiCorp repository, you can install Vault, Consul, Nomad and Packer with the same command.
+
+Verify the installation
+Verify that the installation worked by opening a new terminal session and listing Terraform's available subcommands.
+
+$ terraform -help
+Usage: terraform [-version] [-help] <command> [args]
+
+The available commands for execution are listed below.
+The most common, useful commands are shown first, followed by
+less common or more advanced commands. If you're just getting
+started with Terraform, stick with the common commands. For the
+other commands, please read the help and docs before usage.
+##...
+
+Add any subcommand to terraform -help to learn more about what it does and available options.
+
+$ terraform -help plan
+
+
+
+Source :  https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
+
